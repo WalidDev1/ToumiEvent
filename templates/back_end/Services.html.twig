@@ -1,0 +1,104 @@
+{% block stylesheets %}
+	<link href="https://transloadit.edgly.net/releases/uppy/v1.19.2/uppy.min.css" rel="stylesheet">
+	<style>
+		label {
+			text-align: left !important;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+	{% include('back_end/index.html.twig') %}
+	<div class="page-wrapper">
+		<div style="height: 7%;">
+			<h4 class="page-title" style="margin-left: 15px;padding-top: 20px;">Ajouter un service</h4>
+		</div>
+		<div class="container-fluid" style="    height: 100%;">
+			<form method="post" action="{{ path('ServiceAdd') }}">
+				<div class="card" style="width: 95%;align-items: center;">
+					<div class="card-body">
+						<div class="form-group row">
+							<label for="fname" class="col-sm-3  control-label col-form-label">
+								<i class="mdi mdi-cursor-text"></i>
+								Nom Services</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="p1" name="title" placeholder="First Name Here">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="cono1" class="col-sm-3  control-label col-form-label">
+								<i class="mdi mdi-file-document-box"></i>
+								Desription
+							</label>
+							<div class="col-sm-9">
+								<textarea class="form-control" id="p2" name="description"></textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="input-group">
+								<label for="cono1" class="col-sm-3  control-label col-form-label">
+									<i class="mdi mdi-cash"></i>
+									Prix
+								</label>
+								<input type="number" class="form-control" id="p3" placeholder="5.000" aria-label="Recipient 's username" name="prix" aria-describedby="basic-addon2">
+								<div class="input-group-append">
+									<span class="input-group-text" id="basic-addon2">DH</span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div id="drag-drop-area"></div>
+                            <input type="hidden" id="p4" name="files">
+						</div>
+					</div>
+					<div class="card-footer" style="    width: 100%;
+														    text-align: center;">
+						<button type="button submit" class="btn btn-outline-success" style="margin-right:10%;" disabled>Success</button>
+						<button type="button" class="btn btn-outline-danger">Danger</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}{% block javascripts %}
+<script src="https://transloadit.edgly.net/releases/uppy/v1.19.2/uppy.min.js"></script>
+<script>
+
+    $('#p1').on('change', function () {
+        check();
+    });
+    $('#p2').on('change', function () {
+        check();
+    });
+    $('#p3').on('change', function () {
+        check();
+    });
+    
+    function check(){
+        if ($('#p1').val() != "" && $('#p2').val() != "" && $('#p3').val() != ""){
+            $('.btn-outline-success').prop("disabled", false);
+        }else{
+            console.log('no');
+        }
+    }
+    var uppy = Uppy.Core().use(Uppy.Dashboard, {
+    inline: true,
+    target: '#drag-drop-area'
+    }).use(Uppy.Tus, {endpoint: 'https://master.tus.io/files/'})
+    uppy.on('upload-success', (file, response) => {
+    $('#p4').val($('#p4').val() + ',' +response.uploadURL);
+    console.log( $('#p4').val());
+    })
+    uppy.on('upload-progress', (file, progress) => {
+    $('.btn-outline-success').prop("disabled", true);
+    })
+
+    uppy.on('complete', (result) => {
+    $('.btn-outline-success').prop("disabled", false);
+    })
+{% if Add == true %}
+		tata.success('Service ajouter avec succes', 'Consulter vos services', {
+ 	 duration: 5000
+	})
+{% endif %}
+
+</script>{% endblock %}
