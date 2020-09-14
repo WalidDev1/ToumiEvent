@@ -20,7 +20,7 @@
                                                     {%  if 'image' in media.url %}
                                                     {% set image =   media.url|reverse  %}
                                                     
-                                                    <img src="{{ image[7:]|reverse  }}" class="d-block w-100">
+                                                    <img src="{{ image[11:]|reverse  }}" class="d-block w-100">
                                                     {% else %}
                                                     <video width="320" height="240" autoplay>
 														<source src="{{ media.url }}" type="video/mp4">
