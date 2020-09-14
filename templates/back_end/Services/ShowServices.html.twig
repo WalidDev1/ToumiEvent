@@ -17,8 +17,10 @@
 												{% else %}
 													<div class="carousel-item">
 													{% endif %}
-                                                    {% if media.url[3:] == "jpg" or media.url[3:] == "png"  %}
-                                                    <object data="{{ media.url }}" class="d-block w-100"></object>
+                                                    {%  if 'image' in media.url %}
+                                                    {% set image =   media.url|reverse  %}
+                                                    
+                                                    <img src="{{ image[7:]|reverse  }}" class="d-block w-100">
                                                     {% else %}
                                                     <video width="320" height="240" autoplay>
 														<source src="{{ media.url }}" type="video/mp4">

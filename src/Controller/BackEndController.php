@@ -35,12 +35,16 @@ class BackEndController extends AbstractController
             $Service->setPrix($request->request->get('prix'));
             $Service->setDisponibilite(true);
             if($request->request->get('files') != null){
-               
-                foreach (explode(",",$request->request->get('files')) as $val) {
-                    $media = new Media();
-                    $Service->addMedium($media->setUrl($val));
-                }
-                
+                    foreach($request->files->get('files') as $item){
+                     $media = new Media();
+                     $file = md5(uniqid()).'.'.$item->getClientOriginalExtension();
+                     $item->move(
+                         $this->getParameter('images_directory'),
+                         $file
+                     );
+                     $media->setUrl('/imagesUploaded/'.$file);
+                     $Service->addMedium($media);
+                    }
             }
             
             $em->persist($Service);
