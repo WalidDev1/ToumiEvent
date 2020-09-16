@@ -4,6 +4,84 @@
 		label {
 			text-align: left !important;
 		}
+		.preview-images-zone {
+			width: 100%;
+			border: 1px solid #ddd;
+			min-height: 180px;
+			/* display: flex; */
+			padding: 5px 5px 0;
+			position: relative;
+			overflow: auto;
+		}
+
+		.preview-images-zone>.preview-image:first-child {
+			height: 185px;
+			width: 40%;
+			position: relative;
+			margin-right: 5px;
+		}
+
+		.preview-images-zone > .preview-image {
+			height: 185px;
+			width: 40%;
+			position: relative;
+			margin-right: 5px;
+			float: left;
+			margin-bottom: 5px;
+		}
+
+		.preview-images-zone > .preview-image > .image-zone {
+			width: 100%;
+			height: 100%;
+		}
+
+		.preview-images-zone > .preview-image > .image-zone > img {
+			width: 100%;
+			height: 100%;
+		}
+
+		.preview-images-zone > .preview-image > .tools-edit-image {
+			position: absolute;
+			z-index: 100;
+			color: #fff;
+			bottom: 0;
+			width: 100%;
+			text-align: center;
+			margin-bottom: 10px;
+			display: none;
+		}
+
+		.preview-images-zone > .preview-image > .image-cancel {
+			text-align: center;
+			font-size: 18px;
+			top: 0;
+			width: 100%;
+			right: 0;
+			font-weight: bold;
+			margin-right: 10px;
+			cursor: pointer;
+			display: none;
+			z-index: 100;
+		}
+
+		.preview-image:hover > .image-zone {
+			cursor: move;
+			opacity: .5;
+		}
+
+		.preview-image:hover>.tools-edit-image,
+		.preview-image:hover > .image-cancel {
+			display: block;
+		}
+
+		.ui-sortable-helper {
+			width: 90px !important;
+			height: 90px !important;
+		}
+
+		.container {
+			padding-top: 50px;
+		}
 	</style>
 {% endblock %}
 {% block body %}
@@ -13,13 +91,13 @@
 			<h4 class="page-title" style="margin-left: 15px;padding-top: 20px;">Ajouter un service</h4>
 		</div>
 		<div class="container-fluid" style="    height: 100%;">
-			<form method="post" action="{{ path('ServiceAdd') }}">
+			<form method="post" action="{{ path('ServiceAdd') }}" enctype="multipart/form-data">
 				<div class="card" style="width: 95%;align-items: center;">
-					<div class="card-body">
+					<div class="card-body" style="width: 80%;">
 						<div class="form-group row">
 							<label for="fname" class="col-sm-3  control-label col-form-label">
 								<i class="mdi mdi-cursor-text"></i>
-								Nom Services</label>
+								Nom Services :</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control" id="p1" name="title" placeholder="First Name Here">
 							</div>
@@ -27,7 +105,7 @@
 						<div class="form-group row">
 							<label for="cono1" class="col-sm-3  control-label col-form-label">
 								<i class="mdi mdi-file-document-box"></i>
-								Desription
+								Desription :
 							</label>
 							<div class="col-sm-9">
 								<textarea class="form-control" id="p2" name="description"></textarea>
@@ -37,7 +115,7 @@
 							<div class="input-group">
 								<label for="cono1" class="col-sm-3  control-label col-form-label">
 									<i class="mdi mdi-cash"></i>
-									Prix
+									Prix :
 								</label>
 								<input type="number" class="form-control" id="p3" placeholder="5.000" aria-label="Recipient 's username" name="prix" aria-describedby="basic-addon2">
 								<div class="input-group-append">
@@ -45,42 +123,18 @@
 								</div>
 							</div>
 						</div>
-						<div class="form-group row">
-							<div class="container">
-								<fieldset class="form-group">
-									<a href="javascript:void(0)" onclick="$('#pro-image').click()">Upload Image</a>
-									<input type="file" id="pro-image" name="pro-image" style="display: none;" class="form-control" multiple>
-								</fieldset>
-								<div class="preview-images-zone">
-									<div class="preview-image preview-show-1">
-										<div class="image-cancel" data-no="1">x</div>
-										<div class="image-zone"><img id="pro-img-1" src="https://img.purch.com/w/660/aHR0cDovL3d3dy5saXZlc2NpZW5jZS5jb20vaW1hZ2VzL2kvMDAwLzA5Ny85NTkvb3JpZ2luYWwvc2h1dHRlcnN0b2NrXzYzOTcxNjY1LmpwZw=="></div>
-										<div class="tools-edit-image">
-											<a href="javascript:void(0)" data-no="1" class="btn btn-light btn-edit-image">edit</a>
-										</div>
-									</div>
-									<div class="preview-image preview-show-2">
-										<div class="image-cancel" data-no="2">x</div>
-										<div class="image-zone"><img id="pro-img-2" src="https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/flip.jpg"></div>
-										<div class="tools-edit-image">
-											<a href="javascript:void(0)" data-no="2" class="btn btn-light btn-edit-image">edit</a>
-										</div>
-									</div>
-									<div class="preview-image preview-show-3">
-										<div class="image-cancel" data-no="3">x</div>
-										<div class="image-zone"><img id="pro-img-3" src="http://i.stack.imgur.com/WCveg.jpg"></div>
-										<div class="tools-edit-image">
-											<a href="javascript:void(0)" data-no="3" class="btn btn-light btn-edit-image">edit</a>
-										</div>
-									</div>
-								</div>
-							</div>
-							<input type="hidden" id="p4" name="files">
-						</div>
+						<fieldset class="form-group row">
+							<label for="cono1" class="col-sm-8  control-label col-form-label">
+								<i class="mdi mdi-camera"></i>
+								Media (Image / Video) :
+							</label>
+							<a class="form-control btn btn-success" href="javascript:void(0)" onclick="$('#pro-image').click()">Importer</a>
+							<input type="file" id="pro-image" name="pro-image[]" style="display: none;" class="form-control" multiple>
+							<div class="preview-images-zone"></div>
+						</fieldset>
 					</div>
-					<div class="card-footer" style="    width: 100%;
-																					    text-align: center;">
-						<button type="button submit" class="btn btn-outline-success" style="margin-right:10%;" disabled>Success</button>
+					<div class="card-footer" style="    width: 100%; text-align: center;">
+						<button type="submit" class="btn btn-outline-success" style="margin-right:10%;" disabled>Success</button>
 						<button type="button" class="btn btn-outline-danger">Danger</button>
 					</div>
 				</form>
@@ -90,8 +144,58 @@
 </div>{% endblock %}{% block javascripts %}
 <script src="https://transloadit.edgly.net/releases/uppy/v1.19.2/uppy.min.js"></script>
 <script>
+	$(document).ready(function () {
+document.getElementById('pro-image').addEventListener('change', readImage, false);
+$(document).on('click', '.image-cancel', function () {
+let no = $(this).data('no');
+console.log(no);
+$(".preview-image.preview-show-" + no).remove();
+});
+});
 
-	$('#p1').on('change', function () {
+
+var num = 0;
+function readImage() {
+if (window.File && window.FileList && window.FileReader) {
+var files = event.target.files; // FileList object
+var output = $(".preview-images-zone");
+
+for (let i = 0; i < files.length; i++) {
+var file = files[i];
+if (file.type.match('image') || file.type.match('video')) {
+var picReader = new FileReader();
+if (file.type.match('image')) {
+
+
+picReader.addEventListener('load', function (event) {
+	var picFile = event.target;
+	var html = '<div class="preview-image preview-show-' + num + '">' + '<div class="image-cancel btn-danger" data-no="' + num + '">Supprimer</div>' + '<div class="image-zone"><img id="pro-img-' + num + '" src="' + picFile.result + '" style="object-fit: contain;"></div>' + '</div>';
+
+	output.append(html);
+	num = num + 1;
+	});
+} else {
+	picReader.addEventListener('load', function (event) {
+		var picFile = event.target;
+		var html = '<div class="preview-image preview-show-' + num + '" >' + '<div class="image-cancel btn-danger" data-no="' + num + '">Supprimer</div>' + '<div class="image-zone" ><video id="pro-img-' + num + '" controls style="width: 100%;;height: 100%;"> <source src="' + picFile.result + '"  type="video/mp4" > </video></div>' + '</div>';
+
+		output.append(html);
+		num = num + 1;
+	});
+} picReader.readAsDataURL(file);
+
+} else {
+alert('Fichier non supporter');
+}
+}
+//$("#pro-image").val('');
+} else {
+console.log('Browser not support');
+}
+}
+
+
+$('#p1').on('change', function () {
 check();
 });
 $('#p2').on('change', function () {
@@ -108,26 +212,8 @@ $('.btn-outline-success').prop("disabled", false);
 console.log('no');
 }
 }
-var uppy = Uppy.Core().use(Uppy.Dashboard, {
-inline: true,
-target: '#drag-drop-area'
-}).use(Uppy.Tus, {endpoint: 'https://master.tus.io/files/'})
-uppy.on('upload-success', (file, response) => {
-var url = file.type;
-if (url.includes('image')) {
-$('#p4').val(response.uploadURL + '(image)' + ',' + $('#p4').val());
-} else {
-$('#p4').val(response.uploadURL + '(video)' + ',' + $('#p4').val());
-}
 
-console.log($('#p4').val(), file.type);
-})
-uppy.on('upload-progress', (file, progress) => {
-$('.btn-outline-success').prop("disabled", true);
-})
-
-uppy.on('complete', (result) => {
-$('.btn-outline-success').prop("disabled", false);
-}){% if Add == true %}
-tata.success('Service ajouter avec succes', 'Consulter vos services', {duration: 5000}){% endif %}
+{% if Add == true %}
+tata.success('Service ajouter avec succes', 'Consulter vos services', {duration: 5000})
+{% endif %}
 </script>{% endblock %}

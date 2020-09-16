@@ -28,25 +28,30 @@ class BackEndController extends AbstractController
     public function AddServices(Request $request,EntityManagerInterface $em)
     {
         $Add = false ;
-        if($request->request->get('title') != null){
+        dump($request->request->all());
+        if($request->request->all()){
+            dd($request);
             $Service = new Services();
             $Service->setTitre($request->request->get('title'));
             $Service->setDecription($request->request->get('description'));
             $Service->setPrix($request->request->get('prix'));
             $Service->setDisponibilite(true);
-            if($request->request->get('files') != null){
-                    foreach($request->files->get('files') as $item){
+            if($request->files->get('pro-image') != null){
+                    foreach($request->files->get('pro-image') as $item){
                      $media = new Media();
                      $file = md5(uniqid()).'.'.$item->getClientOriginalExtension();
                      $item->move(
                          $this->getParameter('images_directory'),
                          $file
                      );
-                     $media->setUrl('/imagesUploaded/'.$file);
+                     if(($item->getClientOriginalExtension()) == "png" || ($item->getClientOriginalExtension()) == "jpg" || ($item->getClientOriginalExtension()) == "svg"){
+                        $media->setUrl('/mediaUploaded/'.$file.'(image)');
+                     }else{
+                        $media->setUrl('/mediaUploaded/'.$file.'(video)');
+                     }
                      $Service->addMedium($media);
                     }
             }
-            
             $em->persist($Service);
             $em->flush();
             $Add = true ;
