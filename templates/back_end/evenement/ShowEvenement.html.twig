@@ -1,0 +1,66 @@
+{% block body %}
+{% include('back_end/index.html.twig') %}
+	<div class="page-wrapper">
+		<div class="container-fluid" style="height: 100%;">
+			<div id="easyPaginate">
+				<div class="row">
+					{% for Evenement in Evenements %}
+						<div class="col-md-3">
+							<div class="card" style="height:90%;border-radius: 25px;box-shadow: 5px 5px 5px  rgba(0,0,0,0.6);">
+								<div class="card-body" style="height: 100%;">
+									<div class="row" style="justify-content: space-between;">
+										<div class="col-md-5">
+											<h5 class="card-title">{{ Evenement.titre }}</h5>
+										</div>
+										<div class="col-sm-2">
+											<div class="btn-group" role="group">
+												<button id="btnGroupDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: transparent;
+																																																																																																																							    border: none;">
+													<i class="mdi mdi-dots-vertical"></i>
+												</button>
+												<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+													<a class="dropdown-item" href="{{ path('EvenementUpdate' , {'id': Evenement.id }) }}">Modifier</a>
+													<a class="dropdown-item" href="{{ path('DeleteEvenement' , {'id': Evenement.id }) }}">Supprimer</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<h6>Services :
+										</h6>
+									</div>
+									<div class="row" style=" height: 50%;overflow-y: auto;justify-content: center;">
+                                    {% set Total = 0 %}
+                                    {% for Services in Evenement.Services %}
+										<div class="row" style="width: 100%;justify-content: space-between;">
+                                        {% set Total = Total + Services.prix  %}
+											<h6><i class="mdi mdi-checkbox-marked-circle-outline"></i>{{ Services.titre }}</h6><h5>{{ Services.prix }} Dh</h5>
+										</div>
+                                    {% endfor %}
+									</div>
+                                    <div class="row" style="align-items: center;justify-content: space-between;" >
+                                    <h5>Total :</h5><h6> {{ Total }} Dh</h6> 
+                                    </div>
+								</div>
+								<div class="card-footer" style="border-radius: 0px 0px 25px 25px;">
+									<div class="row">
+										<i class="mdi mdi-directions-fork"></i>
+										<p class="card-text" style="height: 90%; overflow-y: scroll;">{{ Evenement.Adresse }}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}{% block  javascript %}
+<script src="/assets/js/jquery.easyPaginate.js"></script>
+<script>
+	$('#easyPaginate').easyPaginate({paginateElement: '.col-md-3', elementsPerPage: 10, effect: 'climb'});
+    {% if Remove == true %}
+        tata.success('Evenement a ete supprimer avec succes', '👌🏽', {duration: 5000})
+    {% endif %}
+</script>{% endblock %}

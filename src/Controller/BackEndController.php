@@ -23,15 +23,43 @@ class BackEndController extends AbstractController
     }
 
      /**
+     * @Route("/back/Services/Add{id}", name="ServiceUpdate")
      * @Route("/back/Services/Add", name="ServiceAdd")
      */
-    public function AddServices(Request $request,EntityManagerInterface $em)
+    public function AddServices(Request $request,EntityManagerInterface $em , $id = null)
     {
         $Add = false ;
-        dump($request->request->all());
+        $Update = false ;
+        $Service = new Services();
+        
         if($request->request->all()){
-            dd($request);
-            $Service = new Services();
+            // pour une modification d'un service deja existant
+            if($request->request->get('id')){
+                function VerifID(Media $a,$b)
+                {
+                if ($a->getId()===$b)
+                  {
+                  return 0;
+                  }
+                  return ($a>$b)?1:-1;
+                }
+                $Update = true ;
+                $Service =  $this->getDoctrine()
+                ->getRepository(Services::class)
+                ->find($request->request->get('id'));
+
+                $Liste_id = [] ;
+                foreach ($Service->getMedia() as $item ) {
+                    array_push($Liste_id , $item->getId());
+                }
+                $liste_Image_Remove = array_diff($Liste_id,$request->request->get('id_File'));
+                foreach ($liste_Image_Remove  as $item){
+                    $Service->removeMedium(
+                        $this->getDoctrine()
+                        ->getRepository(Media::class)
+                        ->find($item));
+                }
+            }
             $Service->setTitre($request->request->get('title'));
             $Service->setDecription($request->request->get('description'));
             $Service->setPrix($request->request->get('prix'));
@@ -44,11 +72,9 @@ class BackEndController extends AbstractController
                          $this->getParameter('images_directory'),
                          $file
                      );
-                     if(($item->getClientOriginalExtension()) == "png" || ($item->getClientOriginalExtension()) == "jpg" || ($item->getClientOriginalExtension()) == "svg"){
+                    
                         $media->setUrl('/mediaUploaded/'.$file.'(image)');
-                     }else{
-                        $media->setUrl('/mediaUploaded/'.$file.'(video)');
-                     }
+                     
                      $Service->addMedium($media);
                     }
             }
@@ -56,10 +82,21 @@ class BackEndController extends AbstractController
             $em->flush();
             $Add = true ;
         }
+
+         if($id != null){
+
+            $Service =  $this->getDoctrine()
+            ->getRepository(Services::class)
+            ->find($id);
         
-        return $this->render('back_end/Services.html.twig', [
+        }
+        
+      
+        return $this->render('back_end/Services/Services.html.twig', [
             'controller_name' => 'BackEndController1',
-            'Add' => $Add, 
+            'Add' => $Add,
+            'Service' => $Service ,
+            'Update' => $Update
         ]);
     }
 
@@ -75,5 +112,24 @@ class BackEndController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/back/RemoveServices/{id}", name="DeleteServices")
+     */
+    public function DeleteServices(ServicesRepository $Services ,$id , EntityManagerInterface $em)
+    {
+        
+           $ServiceFind =  $this->getDoctrine()
+           ->getRepository(Services::class)->find($id);
+           
+           $em->remove($ServiceFind);
+           $em->flush();
+           
+      
+        $rep = $Services->findAll();
+        return $this->render('back_end/Services/ShowServices.html.twig', [
+            'controller_name' => 'BackEndController1',
+            'Services'=> $rep,
+        ]);
+    }
            
 }

@@ -40,6 +40,17 @@ class Evenement
      */
     private $media;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Date::class, cascade={"persist", "remove"})
+     */
+    private $dateEnd;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $titre;
+
+
     public function __construct()
     {
         $this->Services = new ArrayCollection();
@@ -131,4 +142,29 @@ class Evenement
 
         return $this;
     }
+
+    public function getDateEnd(): ?Date
+    {
+        return $this->dateEnd;
+    }
+
+    public function setDateEnd(?Date $dateEnd): self
+    {
+        $this->dateEnd = $dateEnd;
+
+        return $this;
+    }
+
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(string $titre): self
+    {
+        $this->titre = $titre;
+
+        return $this;
+    }
+
 }

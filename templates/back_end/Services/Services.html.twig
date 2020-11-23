@@ -99,7 +99,7 @@
 								<i class="mdi mdi-cursor-text"></i>
 								Nom Services :</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" id="p1" name="title" placeholder="First Name Here">
+								<input type="text" class="form-control" id="p1" name="title" placeholder="First Name Here" {% if Service != null %} value="{{ Service.titre }}" {% endif %}>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -108,7 +108,7 @@
 								Desription :
 							</label>
 							<div class="col-sm-9">
-								<textarea class="form-control" id="p2" name="description"></textarea>
+								<textarea class="form-control" id="p2" name="description">{% if Service != null %}{{ Service.Decription }}{% endif %}</textarea>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -117,7 +117,7 @@
 									<i class="mdi mdi-cash"></i>
 									Prix :
 								</label>
-								<input type="number" class="form-control" id="p3" placeholder="5.000" aria-label="Recipient 's username" name="prix" aria-describedby="basic-addon2">
+								<input type="number" class="form-control" id="p3" placeholder="5.000" aria-label="Recipient 's username" name="prix" aria-describedby="basic-addon2" {% if Service != null %} value="{{ Service.prix }}" {% endif %}>
 								<div class="input-group-append">
 									<span class="input-group-text" id="basic-addon2">DH</span>
 								</div>
@@ -130,10 +130,23 @@
 							</label>
 							<a class="form-control btn btn-success" href="javascript:void(0)" onclick="$('#pro-image').click()">Importer</a>
 							<input type="file" id="pro-image" name="pro-image[]" style="display: none;" class="form-control" multiple>
-							<div class="preview-images-zone"></div>
+							<div class="preview-images-zone">
+								{% if Service != null %}
+									{% for item in Service.media %}
+									{% set image =   item.url|reverse  %}
+										<div class="preview-image preview-show-{{ item.id  }}">
+											<div class="image-cancel btn-danger" data-no="{{ item.id }}">Supprimer</div>
+											<input name="id" type="hidden" value="{{ Service.id }}">
+											<input name="id_File[]" type="hidden" value="{{ item.id }}">
+											<div class="image-zone"><img id="pro-img-' + num + '" src="{{ image[7:]|reverse }}" style="object-fit: contain;"></div>
+										</div>
+									{% endfor %}
+
+								{% endif %}
+							</div>
 						</fieldset>
 					</div>
-					<div class="card-footer" style="    width: 100%; text-align: center;">
+					<div class="card-footer" style="width: 100%; text-align: center;">
 						<button type="submit" class="btn btn-outline-success" style="margin-right:10%;" disabled>Success</button>
 						<button type="button" class="btn btn-outline-danger">Danger</button>
 					</div>
@@ -148,7 +161,7 @@
 document.getElementById('pro-image').addEventListener('change', readImage, false);
 $(document).on('click', '.image-cancel', function () {
 let no = $(this).data('no');
-console.log(no);
+check();
 $(".preview-image.preview-show-" + no).remove();
 });
 });
@@ -162,33 +175,26 @@ var output = $(".preview-images-zone");
 
 for (let i = 0; i < files.length; i++) {
 var file = files[i];
-if (file.type.match('image') || file.type.match('video')) {
+if (file.type.match('image')) {
 var picReader = new FileReader();
 if (file.type.match('image')) {
 
 
 picReader.addEventListener('load', function (event) {
-	var picFile = event.target;
-	var html = '<div class="preview-image preview-show-' + num + '">' + '<div class="image-cancel btn-danger" data-no="' + num + '">Supprimer</div>' + '<div class="image-zone"><img id="pro-img-' + num + '" src="' + picFile.result + '" style="object-fit: contain;"></div>' + '</div>';
+var picFile = event.target;
+var html = '<div class="preview-image preview-show-' + num + '">' + '<div class="image-cancel btn-danger" data-no="' + num + '">Supprimer</div>' + '<div class="image-zone"><img id="pro-img-' + num + '" src="' + picFile.result + '" style="object-fit: contain;"></div>' + '</div>';
 
-	output.append(html);
-	num = num + 1;
-	});
-} else {
-	picReader.addEventListener('load', function (event) {
-		var picFile = event.target;
-		var html = '<div class="preview-image preview-show-' + num + '" >' + '<div class="image-cancel btn-danger" data-no="' + num + '">Supprimer</div>' + '<div class="image-zone" ><video id="pro-img-' + num + '" controls style="width: 100%;;height: 100%;"> <source src="' + picFile.result + '"  type="video/mp4" > </video></div>' + '</div>';
-
-		output.append(html);
-		num = num + 1;
-	});
-} picReader.readAsDataURL(file);
+output.append(html);
+num = num + 1;
+});
+}
+picReader.readAsDataURL(file);
 
 } else {
 alert('Fichier non supporter');
 }
 }
-//$("#pro-image").val('');
+// $("#pro-image").val('');
 } else {
 console.log('Browser not support');
 }
@@ -215,5 +221,7 @@ console.log('no');
 
 {% if Add == true %}
 tata.success('Service ajouter avec succes', 'Consulter vos services', {duration: 5000})
+{% elseif Update == true %}
+tata.success('Service Modifier avec succes', 'Consulter vos services', {duration: 5000})
 {% endif %}
 </script>{% endblock %}
