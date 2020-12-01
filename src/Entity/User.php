@@ -37,11 +37,6 @@ class User
      */
     private $tele;
 
-    /**
-     * @ORM\OneToOne(targetEntity=date::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $createdAt;
 
     public function getId(): ?int
     {
@@ -92,18 +87,6 @@ class User
     public function setTele(?int $tele): self
     {
         $this->tele = $tele;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?date
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(date $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

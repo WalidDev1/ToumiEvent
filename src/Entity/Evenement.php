@@ -41,14 +41,19 @@ class Evenement
     private $media;
 
     /**
-     * @ORM\OneToOne(targetEntity=Date::class, cascade={"persist", "remove"})
-     */
-    private $dateEnd;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $titre;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Reservation::class, mappedBy="Evenement", cascade={"persist", "remove"})
+     */
+    private $reservation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Description;
 
 
     public function __construct()
@@ -143,18 +148,6 @@ class Evenement
         return $this;
     }
 
-    public function getDateEnd(): ?Date
-    {
-        return $this->dateEnd;
-    }
-
-    public function setDateEnd(?Date $dateEnd): self
-    {
-        $this->dateEnd = $dateEnd;
-
-        return $this;
-    }
-
     public function getTitre(): ?string
     {
         return $this->titre;
@@ -163,6 +156,35 @@ class Evenement
     public function setTitre(string $titre): self
     {
         $this->titre = $titre;
+
+        return $this;
+    }
+
+    public function getReservation(): ?Reservation
+    {
+        return $this->reservation;
+    }
+
+    public function setReservation(Reservation $reservation): self
+    {
+        $this->reservation = $reservation;
+
+        // set the owning side of the relation if necessary
+        if ($reservation->getEvenement() !== $this) {
+            $reservation->setEvenement($this);
+        }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(?string $Description): self
+    {
+        $this->Description = $Description;
 
         return $this;
     }

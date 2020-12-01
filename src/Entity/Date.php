@@ -22,6 +22,11 @@ class Date
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createAt_end;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +40,18 @@ class Date
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreateAtEnd(): ?\DateTimeInterface
+    {
+        return $this->createAt_end;
+    }
+
+    public function setCreateAtEnd(\DateTimeInterface $createAt_end): self
+    {
+        $this->createAt_end = $createAt_end;
 
         return $this;
     }

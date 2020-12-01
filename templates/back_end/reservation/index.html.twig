@@ -1,0 +1,103 @@
+{% block stylesheets %}
+	<style>
+		td > .btn-sm {
+			border-radius: 15px !important;
+			margin-right: 5px;
+		}
+		.customS {
+			text-align: center;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	{% include('back_end/index.html.twig') %}
+
+	<div class="page-wrapper">
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Basic Datatable</h5>
+				<div class="table-responsive">
+					<table id="zero_config" class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<th>Client</th>
+								<th>Date</th>
+								<th>Services</th>
+								<th>Description</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for Res in Reservations %}
+								<!-- Modal -->
+								<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLongTitle">
+													<i class="mdi mdi-alert-octagram"></i>
+													Alert</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<form action="{{ path('Action' , {'id' : 0 ,'idRes' : Res.id }) }}" method="post">
+												<div class="modal-body">
+													Si vous etes sur de refuser cette reservation, veuillez donner un motif afein d'informer votre client
+													<textarea class="form-control" name="Motif" id="exampleFormControlTextarea1" rows="3"></textarea>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+													<input type="submit" class="btn btn-warning" value="Refuser - envoyer"/>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<tr>
+									<td>{{ Res.client.user.nom }}
+										{{ Res.client.user.prenom }}</td>
+									<td class="customS">{{ Res.Evenement.date.getCreatedAt()|date("m/d/Y") }}
+										-
+										{{ Res.Evenement.date.getCreateAtEnd()|date("m/d/Y") }}</td>
+									<td>
+										<li class="list-group-item todo-item" data-role="task">
+											<ul class="list-style-none assignedto" style="display: flex;">
+												{% for Services in Res.Evenement.Services %}
+													{% set imageOne =   Services.media|first  %}
+													{% set image =   imageOne.url|reverse  %}
+													<li class="assignee"><img class="rounded-circle" width="40" src="{{ image[7:]|reverse}}" alt="user" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ Services.Titre }}"></li>
+												{% endfor %}
+											</ul>
+										</li>
+									</td>
+									<td>{{ Res.Evenement.Description}}</td>
+                                    {% if  Res.statut is null %}
+                                    <td class="customS">
+										<a type="button" class="btn btn-success btn-sm" href="{{ path('Action',{ 'id': 1 ,'idRes' : Res.id }) }}">Accepter</a>
+										<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter">Refuser</button>
+									</td>
+                                    {% else %}
+                                    {% if Res.statut %}
+                                         <td class="text-success customS">Accepter</td>
+                                    {% else %}
+                                        <td class="text-danger customS">Rejeté</td>
+                                    {% endif %}
+                                        
+                                    {% endif %}	
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script src="assetsBack/extra-libs/DataTables/datatables.min.js"></script>
+	<script>
+		$('#zero_config').DataTable();
+	</script>
+{% endblock %}

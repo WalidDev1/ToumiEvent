@@ -29,6 +29,17 @@ class Reservation
      */
     private $client;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Evenement::class, inversedBy="reservation", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Evenement;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $statut;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,6 +65,30 @@ class Reservation
     public function setClient(?Client $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getEvenement(): ?Evenement
+    {
+        return $this->Evenement;
+    }
+
+    public function setEvenement(Evenement $Evenement): self
+    {
+        $this->Evenement = $Evenement;
+
+        return $this;
+    }
+
+    public function getStatut(): ?bool
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?bool $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }

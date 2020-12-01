@@ -43,13 +43,10 @@ class EvenementController extends AbstractController
             }
             $Evenement->setTitre($request->request->get('title'));
             $Evenement->setAdresse($request->request->get('Adresse'));
-            $DateStart = new Date();
-            $DateStart->setCreatedAt(new DateTime(substr($request->request->get('dates'), 0 , 10)));
-            
-            $Evenement->setDate($DateStart);
-            $DateEnd = new Date();
-            $DateEnd->setCreatedAt(new DateTime(substr($request->request->get('dates'), -10)));
-            $Evenement->setDateEnd($DateEnd);
+            $Date = new Date();
+            $Date->setCreatedAt(new DateTime(substr($request->request->get('dates'), 0 , 10)));
+            $Date->setCreateAtEnd(new DateTime(substr($request->request->get('dates'), -10)));
+            $Evenement->setDate($Date);
             //ajout des services
             
             for( $i = 0 ; $i <=  strlen($request->request->get('service')[0]) - 1 ; $i ++){

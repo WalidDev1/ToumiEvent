@@ -60,6 +60,7 @@ class BackEndController extends AbstractController
                         ->find($item));
                 }
             }
+            
             $Service->setTitre($request->request->get('title'));
             $Service->setDecription($request->request->get('description'));
             $Service->setPrix($request->request->get('prix'));
